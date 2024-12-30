@@ -8,6 +8,7 @@ class TaskBase(BaseModel):
     start_date: date
     end_date: date
     progress: float
+    status: str = "進行中"
     goal_id: int
 
 class TaskCreate(TaskBase):
@@ -17,4 +18,4 @@ class TaskResponse(TaskBase):
     id: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True

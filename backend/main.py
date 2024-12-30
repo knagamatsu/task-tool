@@ -35,8 +35,9 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
 def get_tasks(db: Session = Depends(get_db)):
     return db.query(Task).all()
 
-@app.put("/tasks/{task_id}")
+@app.put("/tasks/{task_id}", response_model=TaskResponse)  # レスポンスモデルを追加
 def update_task(task_id: int, task: TaskCreate, db: Session = Depends(get_db)):
+    print(f"Updating task {task_id} with data:", task.dict())  # デバッグ用
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -45,8 +46,19 @@ def update_task(task_id: int, task: TaskCreate, db: Session = Depends(get_db)):
         setattr(db_task, key, value)
     
     db.commit()
-    return {"status": "success"}
+    db.refresh(db_task)  # 更新後のデータを再取得
+    return db_task  # 更新されたタスクを返す
 
 @app.get("/goals/")
 def get_goals(db: Session = Depends(get_db)):
     return db.query(Goal).all()
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    db.delete(db_task)
+    db.commit()
+    return {"status": "success"}

@@ -11,6 +11,7 @@ class Task(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     progress = Column(Float, default=0)
+    status = Column(String, default="進行中")  # "進行中" or "完了"
     goal_id = Column(Integer, ForeignKey("goals.id"))
     
     goal = relationship("Goal", back_populates="tasks")

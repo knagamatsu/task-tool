@@ -18,38 +18,6 @@ def init_db():
             db.add(goal)
         db.commit()
 
-        # タスクの作成
-        tasks = [
-            Task(
-                title="プロジェクト計画の作成",
-                description="次期プロジェクトの計画書を作成する",
-                start_date=datetime.now(),
-                end_date=datetime.now() + timedelta(days=7),
-                progress=0,
-                goal_id=1
-            ),
-            Task(
-                title="Python学習",
-                description="FastAPIの基礎を学ぶ",
-                start_date=datetime.now(),
-                end_date=datetime.now() + timedelta(days=14),
-                progress=0,
-                goal_id=2
-            ),
-            Task(
-                title="ジム通い",
-                description="週3回のジム通いを継続する",
-                start_date=datetime.now(),
-                end_date=datetime.now() + timedelta(days=30),
-                progress=0,
-                goal_id=4
-            )
-        ]
-        
-        for task in tasks:
-            db.add(task)
-        db.commit()
-
     except Exception as e:
         print(f"エラーが発生しました: {e}")
         db.rollback()
